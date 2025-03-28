@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+geoalchemy2
+pydantic
+python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]
+shapely
