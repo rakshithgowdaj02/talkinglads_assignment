@@ -37,7 +37,7 @@ def create_access_token(data: dict):
 
 
 @router.post("/token", response_model=schemas.Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -50,7 +50,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 
 
 @router.post("/register", response_model=schemas.User)
-def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.username == user.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
@@ -60,12 +60,3 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     return db_user
-
-
-@router.get("/users/me", response_model=schemas.User)
-def read_users_me(current_user: schemas.User = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    print(current_user)
-    user = db.query(models.User).filter(models.User.username == current_user).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user

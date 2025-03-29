@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app import schemas, models
 
 
-def create_point(db: Session, point: schemas.PointCreate):
+async def create_point(db: Session, point: schemas.PointCreate):
     db_point = models.Point(name=point.name, location=point.location)
     db.add(db_point)
     db.commit()
@@ -10,15 +10,15 @@ def create_point(db: Session, point: schemas.PointCreate):
     return db_point
 
 
-def get_points(db: Session, skip: int = 0, limit: int = 10):
+async def get_points(db: Session, skip: int = 0, limit: int = 10):
     return db.query(models.Point).offset(skip).limit(limit).all()
 
 
-def get_point(db: Session, point_id: int):
+async def get_point(db: Session, point_id: int):
     return db.query(models.Point).filter(models.Point.id == point_id).first()
 
 
-def update_point(db: Session, point_id: int, point: schemas.PointUpdate):
+async def update_point(db: Session, point_id: int, point: schemas.PointUpdate):
     db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
     if db_point:
         db_point.name = point.name
@@ -28,7 +28,7 @@ def update_point(db: Session, point_id: int, point: schemas.PointUpdate):
     return db_point
 
 
-def delete_point(db: Session, point_id: int):
+async def delete_point(db: Session, point_id: int):
     db_point = db.query(models.Point).filter(models.Point.id == point_id).first()
     if db_point:
         db.delete(db_point)
@@ -36,7 +36,7 @@ def delete_point(db: Session, point_id: int):
     return db_point
 
 
-def create_polygon(db: Session, polygon: schemas.PolygonCreate):
+async def create_polygon(db: Session, polygon: schemas.PolygonCreate):
     db_polygon = models.Polygon(name=polygon.name, boundary=polygon.boundary)
     db.add(db_polygon)
     db.commit()
@@ -44,15 +44,15 @@ def create_polygon(db: Session, polygon: schemas.PolygonCreate):
     return db_polygon
 
 
-def get_polygons(db: Session, skip: int = 0, limit: int = 10):
+async def get_polygons(db: Session, skip: int = 0, limit: int = 10):
     return db.query(models.Polygon).offset(skip).limit(limit).all()
 
 
-def get_polygon(db: Session, polygon_id: int):
+async def get_polygon(db: Session, polygon_id: int):
     return db.query(models.Polygon).filter(models.Polygon.id == polygon_id).first()
 
 
-def update_polygon(db: Session, polygon_id: int, polygon: schemas.PolygonUpdate):
+async def update_polygon(db: Session, polygon_id: int, polygon: schemas.PolygonUpdate):
     db_polygon = db.query(models.Polygon).filter(models.Polygon.id == polygon_id).first()
     if db_polygon:
         db_polygon.name = polygon.name
@@ -62,7 +62,7 @@ def update_polygon(db: Session, polygon_id: int, polygon: schemas.PolygonUpdate)
     return db_polygon
 
 
-def delete_polygon(db: Session, polygon_id: int):
+async def delete_polygon(db: Session, polygon_id: int):
     db_polygon = db.query(models.Polygon).filter(models.Polygon.id == polygon_id).first()
     if db_polygon:
         db.delete(db_polygon)
